@@ -237,57 +237,25 @@ void process() {
 }
 
 void process_dengo() {
-  // Joystick.button(1, psx.buttonPressed(PSB_SQUARE));
-  // Joystick.button(2, psx.buttonPressed(PSB_CROSS));
-  // Joystick.button(3, psx.buttonPressed(PSB_CIRCLE));
-  // Joystick.button(4, psx.buttonPressed(PSB_TRIANGLE));
-  // Joystick.button(5, psx.buttonPressed(PSB_L1));
-  // Joystick.button(6, psx.buttonPressed(PSB_R1));
+  Joystick.button(1, psx.buttonPressed(PSB_SQUARE));
+  Joystick.button(2, psx.buttonPressed(PSB_CROSS));
+  Joystick.button(3, psx.buttonPressed(PSB_CIRCLE));
+  Joystick.button(4, psx.buttonPressed(PSB_TRIANGLE));
+  Joystick.button(5, psx.buttonPressed(PSB_L1));
+  Joystick.button(6, psx.buttonPressed(PSB_R1));
 
-  // Joystick.button(14, psx.buttonPressed(PSB_L2));
-  // Joystick.button(15, psx.buttonPressed(PSB_R2));
+  Joystick.button(14, psx.buttonPressed(PSB_L2));
+  Joystick.button(15, psx.buttonPressed(PSB_R2));
 
-  // Joystick.button(9, psx.buttonPressed(PSB_SELECT));
-  // Joystick.button(10, psx.buttonPressed(PSB_START));
-  // Joystick.button(11, psx.buttonPressed(PSB_L3));
-  // Joystick.button(12, psx.buttonPressed(PSB_R3));
+  Joystick.button(9, psx.buttonPressed(PSB_SELECT));
+  Joystick.button(10, psx.buttonPressed(PSB_START));
+  Joystick.button(11, psx.buttonPressed(PSB_L3));
+  Joystick.button(12, psx.buttonPressed(PSB_R3));
 
   // Joystick.button(18, psx.buttonPressed(PSB_PAD_UP));
   // Joystick.button(19, psx.buttonPressed(PSB_PAD_DOWN));
-  // Joystick.button(20, psx.buttonPressed(PSB_PAD_LEFT));
-  // Joystick.button(21, psx.buttonPressed(PSB_PAD_RIGHT));
-
-/* Elecom JC-PS201 Emulation for use with the BVE Plugin */
-  Joystick.button(1, psx.buttonPressed(PSB_TRIANGLE));
-  Joystick.button(2, psx.buttonPressed(PSB_CIRCLE));
-  Joystick.button(3, psx.buttonPressed(PSB_CROSS));
-  Joystick.button(4, psx.buttonPressed(PSB_SQUARE));
-  Joystick.button(5, psx.buttonPressed(PSB_L2));
-  Joystick.button(6, psx.buttonPressed(PSB_R2));
-  Joystick.button(7, psx.buttonPressed(PSB_L1));
-  Joystick.button(8, psx.buttonPressed(PSB_R1));
-  Joystick.button(9, psx.buttonPressed(PSB_START));
-  Joystick.button(10, psx.buttonPressed(PSB_SELECT));
-  Joystick.button(11, psx.buttonPressed(PSB_L3));
-  Joystick.button(12, psx.buttonPressed(PSB_R3));
-  Joystick.button(13, psx.buttonPressed(PSB_PAD_UP));
-  Joystick.button(14, psx.buttonPressed(PSB_PAD_RIGHT));
-  Joystick.button(15, psx.buttonPressed(PSB_PAD_DOWN));
-  Joystick.button(16, psx.buttonPressed(PSB_PAD_LEFT));
-
-  if (psx.buttonPressed(PSB_PAD_LEFT) && !psx.buttonPressed(PSB_PAD_RIGHT)) {
-    Joystick.hat(270); 
-  } else if (!psx.buttonPressed(PSB_PAD_LEFT) && psx.buttonPressed(PSB_PAD_RIGHT)) {
-    Joystick.hat(90);
-  } else {
-    Joystick.hat(-1);
-  }
-
-  Joystick.Y(512);
-  Joystick.X(512);
-
-  Joystick.slider(512);
-  Joystick.Zrotate(512);
+  Joystick.button(20, psx.buttonPressed(PSB_PAD_LEFT));
+  Joystick.button(21, psx.buttonPressed(PSB_PAD_RIGHT));
 
   Joystick.send_now();
 }
@@ -418,29 +386,15 @@ void loop() {
       haveController = true;
     }
   } else {
-    static bool dengo_mode;
     if (!psx.read ()) {
       Serial.println (F("Controller lost :("));
       haveController = false;
-      dengo_mode = false;
     } else {
       if (psx.getProtocol() == PSPROTO_NEGCON) {
         process_negcon();
       }
-      else {
-        bool dengo_flag = psx.buttonPressed(PSB_PAD_UP) && psx.buttonPressed(PSB_PAD_DOWN);
-        if (!dengo_mode && dengo_flag) {
-          dengo_mode = true;
-          Serial.println(F("dengo mode on"));
-        } else if (dengo_mode) {
-          process_dengo();
-        } else if (!dengo_flag) {
-          dengo_mode = false;
-          Serial.println(F("dengo mode off"));
-        } else {
-          process();
-        }
-      }
+      else
+        process_dengo();
     }
   }
 }
